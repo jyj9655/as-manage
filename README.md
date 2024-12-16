@@ -120,7 +120,7 @@ def send_email(new_data):
     smtp_server.quit()
 
 # data.json 파일에서 이전 데이터 불러오기
-previous_data = load_data('data_gangseo.json')
+previous_data = load_data('data_A.json')
 
 # 현재 데이터 가져오기
 current_data = get_current_data()
