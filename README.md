@@ -103,7 +103,7 @@ def send_email(new_data):
     subject = f"{now} A도서관 신규 A/S접수"
 
     msg = MIMEMultipart()
-    msg['From'] = my_email
+    msg['From'] = host_email
     msg['To'] = ', '.join(to_email)
     msg['Subject'] = subject
     # 메일 본문 추가
@@ -113,10 +113,10 @@ def send_email(new_data):
     # SMTP 서버 연결
     smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
     smtp_server.starttls()
-    smtp_server.login(my_email, my_password)
+    smtp_server.login(host_email, host_password)
 
     # 메일 보내기
-    smtp_server.sendmail(my_email, to_email, msg.as_string())
+    smtp_server.sendmail(host_email, to_email, msg.as_string())
     smtp_server.quit()
 
 # data.json 파일에서 이전 데이터 불러오기
@@ -225,7 +225,7 @@ def send_email(library_name, new_data):
 
     subject = f"{now} {library_name} 신규 A/S 접수"
     msg = MIMEMultipart()
-    msg['From'] = my_email
+    msg['From'] = host_email
     msg['To'] = ', '.join(to_email)
     msg['Subject'] = subject
     msg.attach(MIMEText(result))
@@ -233,8 +233,8 @@ def send_email(library_name, new_data):
     try:
         smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
         smtp_server.starttls()
-        smtp_server.login(my_email, my_password)
-        smtp_server.sendmail(my_email, to_email, msg.as_string())
+        smtp_server.login(host_email, host_password)
+        smtp_server.sendmail(host_email, to_email, msg.as_string())
         smtp_server.quit()
         print(f"Email sent successfully for {library_name}")
     except Exception as e:
@@ -487,6 +487,51 @@ else:
                 save_data(library['data_file'], current_data)  # 데이터 저장
 
 ```
+---
+
+## 사용 방법 (공통)
+
+### 1. `exe` 파일 생성
+최종 Python 파일을 `exe`로 변환하여 실행 파일로 사용합니다.  
+이 작업을 위해 `pyinstaller`를 사용하며, 아래 명령어로 간단히 변환할 수 있습니다.
+
+```bash
+pyinstaller --onefile as-manage(A).py
+```
+
+#### 옵션 설명
+- **`--onefile`**: 하나의 독립된 실행 파일로 생성.
+- **`as-manage(A).py`**: 변환할 Python 파일 이름.
+
+#### 실행 결과
+- 위 명령어를 실행하면, `dist/` 디렉토리 안에 `as-manage(A).exe` 파일이 생성됩니다.
+
+---
+
+### 2. 작업 스케줄러에 등록
+
+#### 1) **Windows 작업 스케줄러 실행**
+- **시작 메뉴**에서 **작업 스케줄러**를 검색하여 실행합니다.
+
+#### 2) **새 작업 만들기**
+1. **작업 만들기**를 클릭합니다.
+2. 작업 이름을 입력합니다 (예: "도서관 A/S 관리").
+
+#### 3) **트리거 설정**
+1. **트리거** 탭으로 이동 → **새로 만들기** 클릭.
+2. 실행 주기를 **매시간**으로 설정합니다.
+
+#### 4) **동작 설정**
+1. **동작** 탭으로 이동 → **새로 만들기** 클릭.
+2. **프로그램/스크립트**에 `as-manage(A).exe` 파일의 경로를 입력합니다.
+
+#### 5) **조건 및 설정 확인**
+1. 필요에 따라 **조건**과 **설정**을 조정합니다.
+2. **저장** 버튼을 클릭합니다.
+
+#### 6) **작업 실행 확인**
+1. 작업을 선택한 후, **작업 실행**을 눌러 정상적으로 작동하는지 확인합니다.
+
 ---
 
 ## 주요 성과
